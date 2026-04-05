@@ -1,0 +1,26 @@
+node_modules/
+dist/
+
+# Demo launcher dependencies
+demo/node_modules/
+
+# Examples
+examples/backend/node_modules/
+examples/backend/dist/
+examples/web/node_modules/
+examples/web/dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
