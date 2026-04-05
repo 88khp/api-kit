@@ -1,0 +1,12 @@
+{
+  "name": "api-kit-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-command launcher for the api-kit demo (backend + web). Not part of the library.",
+  "scripts": {
+    "start": "node run.js"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
