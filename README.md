@@ -191,14 +191,20 @@ Full guide → [docs/logger.md](docs/logger.md)
 
 ## Run the demo
 
-See token refresh, race-condition guard, and live expiry countdown in action:
+**Hosted demo** — no setup needed:
+[https://web-self-delta-77.vercel.app/](https://web-self-delta-77.vercel.app/)
+
+See token refresh, race-condition guard, and live expiry countdown in action.
+Login with `alice / password123`.
+
+Or run it locally:
 
 ```bash
 npm run demo
 ```
 
 Opens a Vite + React app at `http://localhost:5173` backed by a local Express server.
-Login with `alice / password123`. Full guide → [docs/demo.md](docs/demo.md)
+Full guide → [docs/demo.md](docs/demo.md)
 
 ---
 
