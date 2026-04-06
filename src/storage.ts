@@ -46,8 +46,12 @@ const LS_EXPIRY_KEY  = "api_kit_access_token_expires_at";
  * Persists tokens in `localStorage`.
  * Tokens survive page reloads but are scoped to the origin.
  *
- * Security note: localStorage is accessible to any JS on the page.
- * Prefer HttpOnly cookies for high-security applications.
+ * Security note: localStorage is readable by any JavaScript running on the
+ * page. A single XSS vulnerability exposes both the access token AND the
+ * refresh token — the refresh token is long-lived and can be used to silently
+ * mint new access tokens even after the access token expires.
+ * For high-security applications, store tokens in HttpOnly cookies instead so
+ * they are never accessible to JavaScript at all.
  */
 export class LocalStorageTokenStorage implements TokenStorage {
   getAccessToken(): string | null {

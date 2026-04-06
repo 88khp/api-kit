@@ -47,7 +47,7 @@ export function decodeJwt(token: string): JwtPayload | null {
 export function isTokenExpiringSoon(token: string, thresholdSeconds: number): boolean {
   if (thresholdSeconds <= 0) return false;
   const payload = decodeJwt(token);
-  if (!payload?.exp) return false;
+  if (!payload?.exp || typeof payload.exp !== "number") return false;
   const nowSeconds = Math.floor(Date.now() / 1000);
   return payload.exp - nowSeconds <= thresholdSeconds;
 }

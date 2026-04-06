@@ -81,6 +81,15 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** Parse a Retry-After header value into milliseconds. Handles both delta-seconds and HTTP-date. */
+function parseRetryAfter(value: string): number | null {
+  const seconds = Number(value);
+  if (!Number.isNaN(seconds) && seconds >= 0) return seconds * 1000;
+  const date = new Date(value);
+  if (!Number.isNaN(date.getTime())) return Math.max(0, date.getTime() - Date.now());
+  return null;
+}
+
 // ─────────────────────────────────────────────
 //  ApiClient (singleton)
 // ─────────────────────────────────────────────
@@ -111,9 +120,13 @@ export class ApiClient {
 
   /**
    * Destroy the singleton — useful in tests to get a fresh instance.
+   * Must only be called in test environments; throws in production.
    * @internal
    */
   static _reset(): void {
+    if (typeof process !== "undefined" && process.env["NODE_ENV"] === "production") {
+      throw new Error("ApiClient._reset() must not be called in production");
+    }
     ApiClient._instance = null;
   }
 
@@ -334,6 +347,9 @@ export class ApiClient {
     );
 
     const tokens = response.data;
+    if (!tokens?.accessToken || !tokens?.refreshToken) {
+      throw new Error("Invalid token response from server: missing accessToken or refreshToken");
+    }
     await this.cfg.storage.setTokens(tokens);
     this.cfg.hooks?.onTokenRefreshed?.(tokens);
 
@@ -369,7 +385,10 @@ export class ApiClient {
   ): Promise<AxiosResponse> {
     config._retryCount = (config._retryCount ?? 0) + 1;
 
-    const delay = backoffDelay(
+    const retryAfterHeader = originalError.response?.headers?.["retry-after"];
+    const retryAfterMs = retryAfterHeader ? parseRetryAfter(retryAfterHeader) : null;
+
+    const delay = retryAfterMs ?? backoffDelay(
       config._retryCount,
       this.cfg.retry.baseDelayMs,
       this.cfg.retry.maxDelayMs
