@@ -1,6 +1,6 @@
 {
   "name": "@devraj-labs/api-kit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Production-grade API client with automatic token lifecycle management, race-condition-safe refresh handling, and platform-agnostic storage adapters.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
