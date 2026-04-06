@@ -8,6 +8,7 @@ import { User } from "../hooks/useAuth";
 import { apiClient } from "../apiClient";
 import TokenStatusBar from "./TokenStatusBar";
 import RaceConditionDemo from "./RaceConditionDemo";
+import Footer from "./Footer";
 
 interface Props {
   user: User;
@@ -169,6 +170,8 @@ export default function Dashboard({ user, tokenConfig, onLogout }: Props) {
             ))}
           </div>
         </div>
+
+        <Footer />
 
       </div>
     </div>

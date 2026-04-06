@@ -3,14 +3,21 @@
   "version": "1.0.0",
   "description": "Production-grade API client with automatic token lifecycle management, race-condition-safe refresh handling, and platform-agnostic storage adapters.",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": ["dist", "src"],
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --watch",
     "lint": "eslint src --ext .ts",
-    "demo": "cd demo && npm install --silent && npm start"
+    "demo": "cd demo && npm install --silent && npm start",
+    "release": "npm run build && npm publish --access public"
   },
   "dependencies": {
     "axios": "^1.6.7"

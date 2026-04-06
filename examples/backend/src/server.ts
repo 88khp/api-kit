@@ -10,8 +10,8 @@
  *   GET  /health             — unprotected health check
  *
  * Token expiry is controlled entirely via src/config.ts (or env vars).
- * This makes it trivial to test pre-emptive refresh by setting
- * ACCESS_TOKEN_TTL=15s before starting the server.
+ * Refresh tokens are persisted in Turso (libSQL) so sessions survive
+ * cold starts. Multiple users and concurrent sessions are fully supported.
  */
 
 import express, { NextFunction, Request, Response } from "express";
@@ -19,36 +19,31 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import config from "./config";
+import {
+  initDb,
+  findUserByCredentials,
+  findUserById,
+  addRefreshToken,
+  hasRefreshToken,
+  removeRefreshToken,
+  type User,
+} from "./db";
 
 const app = express();
 app.use(express.json());
+
+// In production (Vercel), set ALLOWED_ORIGINS to a comma-separated list of
+// allowed frontend URLs, e.g. "https://your-web.vercel.app".
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+  : ["http://localhost:5173", "http://localhost:3000"];
+
 app.use(
   cors({
-    // Allow the Vite dev server origin
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
-
-// ─────────────────────────────────────────────
-//  In-memory "database"
-// ─────────────────────────────────────────────
-
-interface User {
-  id: string;
-  username: string;
-  password: string; // plaintext — demo only, never do this in prod!
-}
-
-const USERS: User[] = [
-  { id: "u1", username: "alice", password: "password123" },
-];
-
-/**
- * Active refresh tokens stored in memory.
- * Production would persist these in Redis / a DB with TTL support.
- */
-const activeRefreshTokens = new Set<string>();
 
 // ─────────────────────────────────────────────
 //  JWT helpers
@@ -68,30 +63,27 @@ function signAccessToken(user: User): string {
   );
 }
 
-function signRefreshToken(userId: string): string {
-  const jti = uuidv4(); // unique token ID — allows per-device revocation
+async function signRefreshToken(userId: string): Promise<string> {
+  const jti = uuidv4();
   const token = jwt.sign(
     { sub: userId, jti },
     config.jwtSecret,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     { expiresIn: config.refreshTokenExpiresIn as any }
   );
-  activeRefreshTokens.add(token);
+  await addRefreshToken(token, userId);
   return token;
 }
 
-function issueTokenPair(user: User) {
+async function issueTokenPair(user: User) {
   const accessToken  = signAccessToken(user);
-  const refreshToken = signRefreshToken(user.id);
-
-  // Decode the access token to get the absolute expiry timestamp so the
-  // client can schedule a pre-emptive refresh without re-decoding.
+  const refreshToken = await signRefreshToken(user.id);
   const decoded = jwt.decode(accessToken) as { exp: number };
 
   return {
     accessToken,
     refreshToken,
-    accessTokenExpiresAt: decoded.exp, // Unix timestamp (seconds)
+    accessTokenExpiresAt: decoded.exp,
     tokenConfig: {
       accessTokenExpiresIn:  config.accessTokenExpiresIn,
       refreshTokenExpiresIn: config.refreshTokenExpiresIn,
@@ -118,7 +110,7 @@ function requireAuth(req: AuthRequest, res: Response, next: NextFunction): void 
   try {
     req.user = jwt.verify(token, config.jwtSecret) as AccessTokenPayload;
     next();
-  } catch (err) {
+  } catch {
     res.status(401).json({ error: "Invalid or expired access token" });
   }
 }
@@ -127,7 +119,6 @@ function requireAuth(req: AuthRequest, res: Response, next: NextFunction): void 
 //  Routes
 // ─────────────────────────────────────────────
 
-/** Health check */
 app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
@@ -138,8 +129,7 @@ app.get("/health", (_req, res) => {
   });
 });
 
-/** Login */
-app.post("/auth/login", (req, res) => {
+app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body as { username?: string; password?: string };
 
   if (!username || !password) {
@@ -147,18 +137,17 @@ app.post("/auth/login", (req, res) => {
     return;
   }
 
-  const user = USERS.find((u) => u.username === username && u.password === password);
+  const user = await findUserByCredentials(username, password);
   if (!user) {
     res.status(401).json({ error: "Invalid credentials" });
     return;
   }
 
   console.log(`[auth] Login: ${username}`);
-  res.json(issueTokenPair(user));
+  res.json(await issueTokenPair(user));
 });
 
-/** Token refresh */
-app.post("/auth/refresh", (req, res) => {
+app.post("/auth/refresh", async (req, res) => {
   const { refreshToken } = req.body as { refreshToken?: string };
 
   if (!refreshToken) {
@@ -166,8 +155,7 @@ app.post("/auth/refresh", (req, res) => {
     return;
   }
 
-  // Check if the token is in our allowlist (prevents reuse after logout)
-  if (!activeRefreshTokens.has(refreshToken)) {
+  if (!(await hasRefreshToken(refreshToken))) {
     res.status(401).json({ error: "Refresh token not recognised or already revoked" });
     return;
   }
@@ -176,42 +164,36 @@ app.post("/auth/refresh", (req, res) => {
   try {
     payload = jwt.verify(refreshToken, config.jwtSecret) as { sub: string };
   } catch {
-    activeRefreshTokens.delete(refreshToken);
+    await removeRefreshToken(refreshToken);
     res.status(401).json({ error: "Refresh token expired or invalid" });
     return;
   }
 
-  const user = USERS.find((u) => u.id === payload.sub);
+  const user = await findUserById(payload.sub);
   if (!user) {
     res.status(401).json({ error: "User not found" });
     return;
   }
 
-  // Rotate refresh token — old one is revoked immediately
-  activeRefreshTokens.delete(refreshToken);
+  await removeRefreshToken(refreshToken);
 
   console.log(`[auth] Token refreshed for user: ${user.username} (delay: ${config.refreshDelayMs}ms)`);
 
-  // Intentional delay — long enough to make the single-flight guard visible:
-  // all concurrent requests queue up and drain together after this resolves.
-  setTimeout(() => res.json(issueTokenPair(user)), config.refreshDelayMs);
+  setTimeout(async () => res.json(await issueTokenPair(user)), config.refreshDelayMs);
 });
 
-/** Logout */
-app.post("/auth/logout", (req, res) => {
+app.post("/auth/logout", async (req, res) => {
   const { refreshToken } = req.body as { refreshToken?: string };
   if (refreshToken) {
-    activeRefreshTokens.delete(refreshToken);
+    await removeRefreshToken(refreshToken);
   }
   res.json({ message: "Logged out" });
 });
 
-/** Protected: current user */
 app.get("/api/me", requireAuth, (req: AuthRequest, res) => {
   setTimeout(() => res.json({ user: req.user }), config.apiDelayMs);
 });
 
-/** Protected: dummy data endpoint (useful for race-condition demo) */
 app.get("/api/data", requireAuth, (req: AuthRequest, res) => {
   setTimeout(
     () =>
@@ -233,13 +215,22 @@ app.get("/api/data", requireAuth, (req: AuthRequest, res) => {
 // ─────────────────────────────────────────────
 
 const PORT = Number(process.env.PORT ?? 4000);
-app.listen(PORT, () => {
-  console.log(`\n🚀 api-kit demo backend running on http://localhost:${PORT}`);
-  console.log(`   Access token TTL  : ${config.accessTokenExpiresIn}`);
-  console.log(`   Refresh token TTL : ${config.refreshTokenExpiresIn}`);
-  console.log(`   API delay         : ${config.apiDelayMs}ms`);
-  console.log(`   Refresh delay     : ${config.refreshDelayMs}ms`);
-  console.log(`\n   Demo account: alice / password123\n`);
+
+initDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 api-kit demo backend running on http://localhost:${PORT}`);
+    console.log(`   Access token TTL  : ${config.accessTokenExpiresIn}`);
+    console.log(`   Refresh token TTL : ${config.refreshTokenExpiresIn}`);
+    console.log(`   API delay         : ${config.apiDelayMs}ms`);
+    console.log(`   Refresh delay     : ${config.refreshDelayMs}ms`);
+    console.log(`\n   Demo accounts:`);
+    console.log(`     alice / password123`);
+    console.log(`     bob   / password123`);
+    console.log(`     carol / letmein\n`);
+  });
+}).catch((err) => {
+  console.error("Failed to initialise database:", err);
+  process.exit(1);
 });
 
 export default app;

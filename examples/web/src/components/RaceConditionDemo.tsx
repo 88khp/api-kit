@@ -31,7 +31,7 @@ export default function RaceConditionDemo() {
     setLogs((prev) => [
       {
         id: ++globalId,
-        timestamp: new Date().toLocaleTimeString("en", { hour12: false, fractionalSecondDigits: 2 }),
+        timestamp: new Date().toLocaleTimeString("en", { hour12: false }),
         message,
         type,
       },

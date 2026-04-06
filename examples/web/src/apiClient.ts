@@ -9,8 +9,8 @@
  * console-backed object so the demo has zero extra dependencies.
  */
 
-import { ApiClient, LocalStorageTokenStorage } from "../../../src/index";
-import type { ApiKitLogger } from "../../../src/index";
+import { ApiClient, LocalStorageTokenStorage } from "@devraj-labs/api-kit";
+import type { ApiKitLogger } from "@devraj-labs/api-kit";
 
 export const tokenStorage = new LocalStorageTokenStorage();
 
@@ -23,8 +23,12 @@ const logger: ApiKitLogger = {
   error: (msg, meta) => console.error("[api-kit]", msg, meta ?? ""),
 };
 
+// In production (Vercel), set VITE_API_BASE_URL to your backend deployment URL.
+// In dev, leave it empty — Vite proxies /auth and /api to localhost:4000.
+const baseURL = import.meta.env.VITE_API_BASE_URL ?? "";
+
 export const apiClient = ApiClient.getInstance({
-  baseURL: "",              // Vite proxies /auth and /api to localhost:4000
+  baseURL,
   refreshEndpoint: "/auth/refresh",
   storage: tokenStorage,
   logger,

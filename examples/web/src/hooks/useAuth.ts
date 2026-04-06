@@ -27,7 +27,7 @@ export interface LoginPayload {
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tokenConfig, setTokenConfig] = useState<LoginPayload["tokenConfig"] | null>(null);
+  const [tokenConfig, setTokenConfig] = useState<{ accessTokenExpiresIn: string; refreshTokenExpiresIn: string } | null>(null);
 
   // On mount, try to restore session from storage
   useEffect(() => {

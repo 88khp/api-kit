@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Footer from "./Footer";
 
 interface Props {
   onLogin: (username: string, password: string) => Promise<void>;
@@ -17,7 +18,7 @@ export default function LoginForm({ onLogin }: Props) {
     try {
       await onLogin(username, password);
     } catch {
-      setError("Invalid credentials. Use alice / password123.");
+      setError("Invalid credentials. Try alice, bob, or carol / password123.");
     } finally {
       setLoading(false);
     }
@@ -110,10 +111,15 @@ export default function LoginForm({ onLogin }: Props) {
 
           <div className="mt-5 pt-4 border-t border-slate-800">
             <p className="text-xs text-slate-500">
-              Demo account: <span className="text-slate-300 font-mono">alice / password123</span>
+              Demo accounts:{" "}
+              <span className="text-slate-300 font-mono">alice</span>,{" "}
+              <span className="text-slate-300 font-mono">bob</span>,{" "}
+              <span className="text-slate-300 font-mono">carol</span>
+              {" "}/ <span className="text-slate-300 font-mono">password123</span>
             </p>
           </div>
         </div>
+        <Footer />
       </div>
     </div>
   );
