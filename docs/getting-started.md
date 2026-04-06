@@ -11,12 +11,6 @@
 npm install @devraj-labs/api-kit
 ```
 
-Not yet published? Reference it locally:
-
-```ts
-import { ApiClient } from "./path/to/api-kit/src";
-```
-
 ---
 
 ## Setup — 3 steps

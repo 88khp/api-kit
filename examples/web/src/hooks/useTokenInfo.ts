@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { tokenStorage } from "../apiClient";
-import { decodeJwt } from "../../../../src/jwt";
+import { decodeJwt } from "@devraj-labs/api-kit";
 
 export interface TokenInfo {
   expiresAt: Date | null;

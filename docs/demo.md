@@ -2,7 +2,18 @@
 
 The demo is a self-contained app that shows api-kit in action — token refresh, race-condition guard, and live expiry countdown. It is not part of the library.
 
-## Start
+## Live demo
+
+| | URL |
+|---|---|
+| Web app | https://web-self-delta-77.vercel.app |
+| Backend API | https://backend-eta-eight-49.vercel.app |
+
+Demo accounts: `alice / password123`, `bob / password123`, `carol / letmein`
+
+Multiple people can use the demo simultaneously — each session gets its own token pair. Refresh tokens are persisted in [Turso](https://turso.tech) (hosted SQLite) so sessions survive backend cold starts.
+
+## Run locally
 
 From the repo root:
 
@@ -33,12 +44,12 @@ Default is `30s` access / `1d` refresh — short enough to observe refresh witho
 
 ## Configure artificial delays
 
-The backend adds intentional latency so concurrent behaviour is visible in DevTools.
+The backend adds intentional latency **in local dev only** so concurrent behaviour is visible in DevTools. Delays are automatically set to `0` in production.
 
-| Env var | Default | What it controls |
-|---|---|---|
-| `API_DELAY_MS` | `500` | Every `/api/*` response |
-| `REFRESH_DELAY_MS` | `4000` | The `/auth/refresh` response |
+| Env var | Local default | Production | What it controls |
+|---|---|---|---|
+| `API_DELAY_MS` | `500` | `0` | Every `/api/*` response |
+| `REFRESH_DELAY_MS` | `4000` | `0` | The `/auth/refresh` response |
 
 ```bash
 # Slower API calls — requests queue up longer
@@ -51,7 +62,7 @@ REFRESH_DELAY_MS=500 npm run demo
 API_DELAY_MS=200 REFRESH_DELAY_MS=3000 ACCESS_TOKEN_TTL=15s npm run demo
 ```
 
-The 2 s refresh delay is the key one: when you fire 5 concurrent requests and the token is expired, you will see all 5 `/api/data` calls pending in DevTools for ~2 s while exactly one `/auth/refresh` runs, then all 5 complete together.
+The 4 s refresh delay is the key one: when you fire 5 concurrent requests and the token is expired, you will see all 5 `/api/data` calls pending in DevTools for ~4 s while exactly one `/auth/refresh` runs, then all 5 complete together.
 
 ## What to look at
 
@@ -71,7 +82,8 @@ demo/
 examples/
 ├── backend/       # Express server — the only backend used by the demo
 │   └── src/
-│       ├── config.ts   # token TTL (env-driven)
+│       ├── config.ts   # token TTL + delays (env-driven, delays = 0 in production)
+│       ├── db.ts       # Turso HTTP client — users + refresh token persistence
 │       └── server.ts   # /auth/login · /auth/refresh · /api/data · /api/me
 └── web/           # Vite + React + Tailwind demo app
 ```

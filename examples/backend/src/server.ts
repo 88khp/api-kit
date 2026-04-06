@@ -45,6 +45,16 @@ app.use(
   })
 );
 
+// Lazy DB init — runs once, shared across all requests (works in serverless too)
+let dbReady: Promise<void> | null = null;
+function ensureDb(): Promise<void> {
+  if (!dbReady) dbReady = initDb();
+  return dbReady;
+}
+app.use((_req, _res, next) => {
+  ensureDb().then(() => next()).catch(next);
+});
+
 // ─────────────────────────────────────────────
 //  JWT helpers
 // ─────────────────────────────────────────────
@@ -211,26 +221,27 @@ app.get("/api/data", requireAuth, (req: AuthRequest, res) => {
 });
 
 // ─────────────────────────────────────────────
-//  Start
+//  Start (local only — Vercel uses export default)
 // ─────────────────────────────────────────────
 
-const PORT = Number(process.env.PORT ?? 4000);
-
-initDb().then(() => {
-  app.listen(PORT, () => {
-    console.log(`\n🚀 api-kit demo backend running on http://localhost:${PORT}`);
-    console.log(`   Access token TTL  : ${config.accessTokenExpiresIn}`);
-    console.log(`   Refresh token TTL : ${config.refreshTokenExpiresIn}`);
-    console.log(`   API delay         : ${config.apiDelayMs}ms`);
-    console.log(`   Refresh delay     : ${config.refreshDelayMs}ms`);
-    console.log(`\n   Demo accounts:`);
-    console.log(`     alice / password123`);
-    console.log(`     bob   / password123`);
-    console.log(`     carol / letmein\n`);
+if (process.env.NODE_ENV !== "production") {
+  const PORT = Number(process.env.PORT ?? 4000);
+  ensureDb().then(() => {
+    app.listen(PORT, () => {
+      console.log(`\n🚀 api-kit demo backend running on http://localhost:${PORT}`);
+      console.log(`   Access token TTL  : ${config.accessTokenExpiresIn}`);
+      console.log(`   Refresh token TTL : ${config.refreshTokenExpiresIn}`);
+      console.log(`   API delay         : ${config.apiDelayMs}ms`);
+      console.log(`   Refresh delay     : ${config.refreshDelayMs}ms`);
+      console.log(`\n   Demo accounts:`);
+      console.log(`     alice / password123`);
+      console.log(`     bob   / password123`);
+      console.log(`     carol / letmein\n`);
+    });
+  }).catch((err) => {
+    console.error("Failed to initialise database:", err);
+    process.exit(1);
   });
-}).catch((err) => {
-  console.error("Failed to initialise database:", err);
-  process.exit(1);
-});
+}
 
 export default app;

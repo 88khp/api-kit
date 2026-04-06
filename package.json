@@ -1,6 +1,6 @@
 {
   "name": "@devraj-labs/api-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Production-grade API client with automatic token lifecycle management, race-condition-safe refresh handling, and platform-agnostic storage adapters.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,10 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "tsc --watch",

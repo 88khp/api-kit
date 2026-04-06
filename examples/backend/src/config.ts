@@ -36,9 +36,9 @@ const config: TokenConfig = {
   refreshTokenExpiresIn: process.env.REFRESH_TOKEN_TTL  ?? "1d",
   jwtSecret:             process.env.JWT_SECRET          ?? "super-secret-dev-key-change-in-prod",
 
-  // ── Artificial delays — tune to make the demo more visible ────────────
-  apiDelayMs:     Number(process.env.API_DELAY_MS     ?? 500),   // 500 ms per API call
-  refreshDelayMs: Number(process.env.REFRESH_DELAY_MS ?? 4000),  // 4 s for refresh
+  // ── Artificial delays — set to 0 in production, non-zero locally to make the demo visible ──
+  apiDelayMs:     Number(process.env.API_DELAY_MS     ?? (process.env.NODE_ENV === "production" ? 0 : 500)),
+  refreshDelayMs: Number(process.env.REFRESH_DELAY_MS ?? (process.env.NODE_ENV === "production" ? 0 : 4000)),
 };
 
 export default config;
