@@ -1,7 +1,7 @@
 {
   "name": "@devraj-labs/api-kit",
   "version": "1.0.0",
-  "description": "Production-grade, platform-agnostic Axios API client with automatic token refresh",
+  "description": "Production-grade API client with automatic token lifecycle management, race-condition-safe refresh handling, and platform-agnostic storage adapters.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -19,6 +19,22 @@
     "typescript": "^5.3.3",
     "@types/node": "^20.11.5"
   },
-  "keywords": ["axios", "api", "token", "refresh", "jwt", "typescript"],
+  "keywords": [
+    "axios",
+    "api-client",
+    "token-refresh",
+    "jwt",
+    "auth",
+    "authentication",
+    "interceptor",
+    "race-condition",
+    "pre-emptive-refresh",
+    "token-storage",
+    "react-native",
+    "typescript",
+    "singleton",
+    "http-client",
+    "bearer-token"
+  ],
   "license": "MIT"
 }
