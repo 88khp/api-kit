@@ -45,5 +45,6 @@
     "http-client",
     "bearer-token"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/devraj-labs/api-kit"
 }
