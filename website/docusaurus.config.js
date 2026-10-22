@@ -50,7 +50,7 @@ const config = {
     },
     footer: {
       style: 'dark',
-      copyright: `Copyright © ${new Date().getFullYear()} 88khp. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} 88khp · @88khp/api-kit. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
