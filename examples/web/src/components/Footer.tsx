@@ -27,13 +27,13 @@ export default function Footer() {
       </a>
       <span className="text-slate-700">·</span>
       <a
-        href="https://github.com/devraj-labs/api-kit"
+        href="https://github.com/88khp/api-kit"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition"
       >
         <GitHubIcon />
-        devraj-labs/api-kit
+        88khp/api-kit
       </a>
     </div>
   );

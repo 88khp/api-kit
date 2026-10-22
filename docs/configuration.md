@@ -46,7 +46,7 @@ ApiClient.getInstance({
   // ── Logger ────────────────────────────────────────────────────────────────
 
   /** Any object with debug / info / warn / error methods.
-   *  Structurally compatible with @devraj-labs/logger out of the box.
+   *  Structurally compatible with @88khp/logger out of the box.
    *  Omit to suppress all internal logs. */
   logger: myLogger,
 
@@ -73,7 +73,7 @@ interface ApiKitLogger {
 }
 ```
 
-This is structurally identical to `Logger` and `ChildLogger` from `@devraj-labs/logger`, so you can pass either directly — see [Logger Integration](./logger.md).
+This is structurally identical to `Logger` and `ChildLogger` from `@88khp/logger`, so you can pass either directly — see [Logger Integration](./logger.md).
 
 ## TokenPair shape
 

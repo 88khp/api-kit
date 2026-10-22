@@ -36,7 +36,7 @@ You will see 5–10 `/api/data` requests, but exactly **one** `/auth/refresh` ca
 
 ## Implementation
 
-[src/client.ts](../src/client.ts) — `handle401()` method:
+[src/client.ts](https://github.com/88khp/api-kit/blob/main/src/client.ts) — `handle401()` method:
 
 ```ts
 private handle401(originalConfig: ExtendedAxiosConfig): Promise<AxiosResponse> {

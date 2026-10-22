@@ -1,15 +1,15 @@
 <div align="center">
 
-# Devraj Labs · API Kit
+# 88khp · API Kit
 
 **The API client that handles auth so you don't have to.**
 
 Token attachment. Silent refresh. Race-condition safety. Works everywhere.
 
-[![npm](https://img.shields.io/npm/v/@devraj-labs/api-kit?color=0ea5e9&label=npm)](https://www.npmjs.com/package/@devraj-labs/api-kit)
+[![npm](https://img.shields.io/npm/v/@88khp/api-kit?color=0ea5e9&label=npm)](https://www.npmjs.com/package/@88khp/api-kit)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-web%20%7C%20React%20Native%20%7C%20Node.js-a855f7)](https://github.com/devraj-labs/api-kit)
+[![Platform](https://img.shields.io/badge/platform-web%20%7C%20React%20Native%20%7C%20Node.js-a855f7)](https://github.com/88khp/api-kit)
 
 </div>
 
@@ -58,12 +58,12 @@ const { data } = await client.get<User>("/api/me");
 - Works in browser, React Native, and Node.js
 - Bring your own storage — any object implementing `getAccessToken / setTokens / clearTokens`
 - Ships with `MemoryTokenStorage`, `LocalStorageTokenStorage`, and `AsyncStorageTokenStorage`
-- First-class support for [`@devraj-labs/rn-storage-kit`](https://github.com/devraj-labs/rn-storage-kit) (encrypted keychain on mobile)
+- First-class support for [`@88khp/rn-storage-kit`](https://github.com/88khp/rn-storage-kit) (encrypted keychain on mobile)
 
 **Production grade**
 - Exponential backoff with full jitter on transient errors (408, 429, 5xx)
 - Auth event hooks — `onTokenRefreshed` · `onAuthFailure` · `onLogout`
-- Bring-your-own logger — any `{ debug, info, warn, error }` object (`console`, `@devraj-labs/logger`, etc.)
+- Bring-your-own logger — any `{ debug, info, warn, error }` object (`console`, `@88khp/logger`, etc.)
 - Singleton pattern — initialise once, use everywhere, no prop drilling
 
 **TypeScript first**
@@ -75,7 +75,7 @@ const { data } = await client.get<User>("/api/me");
 ## Install
 
 ```bash
-npm install @devraj-labs/api-kit axios
+npm install @88khp/api-kit axios
 ```
 
 ---
@@ -84,7 +84,7 @@ npm install @devraj-labs/api-kit axios
 
 ```ts
 // bootstrap.ts — run this once at app entry (index.ts / App.tsx)
-import { ApiClient, LocalStorageTokenStorage } from "@devraj-labs/api-kit";
+import { ApiClient, LocalStorageTokenStorage } from "@88khp/api-kit";
 
 ApiClient.getInstance({
   baseURL: "https://api.example.com",
@@ -99,7 +99,7 @@ ApiClient.getInstance({
 
 ```ts
 // anywhere in your app — no config needed
-import { ApiClient } from "@devraj-labs/api-kit";
+import { ApiClient } from "@88khp/api-kit";
 
 const client = ApiClient.getInstance();
 
@@ -111,7 +111,7 @@ const { data: updated } = await client.patch<Post>("/api/posts/1", { title });
 After login, store the tokens and every subsequent request is handled:
 
 ```ts
-import { ApiClient } from "@devraj-labs/api-kit";
+import { ApiClient } from "@88khp/api-kit";
 
 async function login(username: string, password: string) {
   const res = await fetch("/auth/login", {
@@ -135,12 +135,12 @@ async function login(username: string, password: string) {
 | `MemoryTokenStorage` | Any | Cleared on page reload |
 | `LocalStorageTokenStorage` | Browser | Vulnerable to XSS — dev/demo only |
 | `AsyncStorageTokenStorage` | React Native | Unencrypted — dev/demo only |
-| `@devraj-labs/rn-storage-kit` | React Native | Encrypted keychain — **recommended for prod** |
+| `@88khp/rn-storage-kit` | React Native | Encrypted keychain — **recommended for prod** |
 
 Implement your own with three methods:
 
 ```ts
-import type { TokenStorage } from "@devraj-labs/api-kit";
+import type { TokenStorage } from "@88khp/api-kit";
 
 const myStorage: TokenStorage = {
   getAccessToken:  () => secureGet("access_token"),
@@ -162,8 +162,8 @@ Pass any object with `debug / info / warn / error` — no adapter needed:
 // console
 ApiClient.getInstance({ ..., logger: console });
 
-// @devraj-labs/logger
-import { logger } from "@devraj-labs/logger";
+// @88khp/logger
+import { logger } from "@88khp/logger";
 ApiClient.getInstance({ ..., logger: logger.child({ module: "api-kit" }) });
 
 // silent (default)
@@ -181,7 +181,7 @@ Full guide → [docs/logger.md](docs/logger.md)
 | [Getting Started](docs/getting-started.md) | Install, minimal setup, platform examples |
 | [Configuration](docs/configuration.md) | All config options, types, and defaults |
 | [Token Storage](docs/storage.md) | Built-in adapters, custom storage, rn-storage-kit |
-| [Logger Integration](docs/logger.md) | Using @devraj-labs/logger or any compatible logger |
+| [Logger Integration](docs/logger.md) | Using @88khp/logger or any compatible logger |
 | [Race Condition Guard](docs/race-condition.md) | How concurrent 401s are handled |
 | [Pre-emptive Refresh](docs/preemptive-refresh.md) | Proactive token renewal before expiry |
 | [Examples](docs/examples.md) | Node.js · Browser · React Native · custom storage |
@@ -210,4 +210,4 @@ Full guide → [docs/demo.md](docs/demo.md)
 
 ## License
 
-MIT © [Devraj Labs](https://github.com/devraj-labs)
+MIT © [88khp](https://github.com/88khp)

@@ -1,16 +1,16 @@
 # Example Usage
 
-Full runnable examples live in [`examples/`](../examples/). This page walks through the key patterns.
+Full runnable examples live in [`examples/`](https://github.com/88khp/api-kit/blob/main/examples/). This page walks through the key patterns.
 
 ---
 
 ## Node.js script
 
-Source: [`examples/node-usage.ts`](../examples/node-usage.ts)
+Source: [`examples/node-usage.ts`](https://github.com/88khp/api-kit/blob/main/examples/node-usage.ts)
 
 ```ts
-import { ApiClient, MemoryTokenStorage } from "@devraj-labs/api-kit";
-import type { ApiKitLogger }             from "@devraj-labs/api-kit";
+import { ApiClient, MemoryTokenStorage } from "@88khp/api-kit";
+import type { ApiKitLogger }             from "@88khp/api-kit";
 
 // 1. Storage — in-memory is fine for scripts; use Redis for long-running servers
 const storage = new MemoryTokenStorage();
@@ -66,7 +66,7 @@ See [storage.md → Browser](./storage.md#browser) for the full `CookieTokenStor
 
 ```ts
 // apiClient.ts — initialise once at app entry point
-import { ApiClient }         from "@devraj-labs/api-kit";
+import { ApiClient }         from "@88khp/api-kit";
 import { CookieTokenStorage } from "./cookieTokenStorage"; // your implementation
 
 ApiClient.getInstance({
@@ -95,15 +95,15 @@ export async function fetchUser() {
 
 ---
 
-## React Native — `@devraj-labs/rn-storage-kit` (recommended)
+## React Native — `@88khp/rn-storage-kit` (recommended)
 
-Tokens stored in the iOS Keychain / Android Keystore via [`SecureStorageAdapter`](https://github.com/devraj-labs/rn-storage-kit).
-See [storage.md → React Native](./storage.md#react-native--devraj-labsrn-storage-kit-recommended) for setup and the full bridge adapter.
+Tokens stored in the iOS Keychain / Android Keystore via [`SecureStorageAdapter`](https://github.com/88khp/rn-storage-kit).
+See [storage.md → React Native](./storage.md#react-native--88khprn-storage-kit-recommended) for setup and the full bridge adapter.
 
 ```ts
 // tokenStorage.ts — bridge rn-storage-kit → api-kit TokenStorage
-import { SecureStorageAdapter } from "@devraj-labs/rn-storage-kit";
-import type { TokenStorage, TokenPair } from "@devraj-labs/api-kit";
+import { SecureStorageAdapter } from "@88khp/rn-storage-kit";
+import type { TokenStorage, TokenPair } from "@88khp/api-kit";
 
 interface TokenSchema {
   access_token:  string;
@@ -132,8 +132,8 @@ export const rnSecureTokenStorage: TokenStorage = {
 
 ```ts
 // apiClient.ts
-import { ApiClient }              from "@devraj-labs/api-kit";
-import { createLogger }           from "@devraj-labs/logger";
+import { ApiClient }              from "@88khp/api-kit";
+import { createLogger }           from "@88khp/logger";
 import { rnSecureTokenStorage }   from "./tokenStorage";
 
 const logger = createLogger({ level: "info" }).child({ module: "api-kit" });
@@ -167,11 +167,11 @@ export function useProfile() {
 
 ---
 
-## Using `@devraj-labs/logger`
+## Using `@88khp/logger`
 
 ```ts
-import { createLogger, ConsoleTransport } from "@devraj-labs/logger";
-import { ApiClient }                      from "@devraj-labs/api-kit";
+import { createLogger, ConsoleTransport } from "@88khp/logger";
+import { ApiClient }                      from "@88khp/api-kit";
 
 const logger = createLogger({
   level: "debug",

@@ -8,9 +8,9 @@
  *   cd examples/backend && npm run dev
  *
  * ── Logger ───────────────────────────────────────────────────────────────────
- * To use @devraj-labs/logger, install it and pass the instance:
+ * To use @88khp/logger, install it and pass the instance:
  *
- *   import { createLogger } from "@devraj-labs/logger";
+ *   import { createLogger } from "@88khp/logger";
  *   const logger = createLogger({ level: "debug" });
  *   // or scoped: logger.child({ module: "api-kit" })
  *   ApiClient.getInstance({ ..., logger });
@@ -26,7 +26,7 @@ import type { ApiKitLogger } from "../src/index";
 
 const storage = new MemoryTokenStorage();
 
-// ── Logger (plain console — swap for @devraj-labs/logger in production) ───────
+// ── Logger (plain console — swap for @88khp/logger in production) ───────
 
 const logger: ApiKitLogger = {
   debug: (msg, meta) => console.debug("[api-kit]", msg, meta ?? ""),

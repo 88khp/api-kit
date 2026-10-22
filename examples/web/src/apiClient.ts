@@ -5,16 +5,16 @@
  * Every other file calls ApiClient.getInstance() (no args) to get the same instance.
  *
  * Logger: pass any object with debug/info/warn/error — including a
- * @devraj-labs/logger instance or child logger.  Here we use a plain
+ * @88khp/logger instance or child logger.  Here we use a plain
  * console-backed object so the demo has zero extra dependencies.
  */
 
-import { ApiClient, LocalStorageTokenStorage } from "@devraj-labs/api-kit";
-import type { ApiKitLogger } from "@devraj-labs/api-kit";
+import { ApiClient, LocalStorageTokenStorage } from "@88khp/api-kit";
+import type { ApiKitLogger } from "@88khp/api-kit";
 
 export const tokenStorage = new LocalStorageTokenStorage();
 
-// Minimal console logger — swap this for your @devraj-labs/logger instance
+// Minimal console logger — swap this for your @88khp/logger instance
 // e.g. createLogger({ level: "debug" }).child({ module: "api-kit" })
 const logger: ApiKitLogger = {
   debug: (msg, meta) => console.debug("[api-kit]", msg, meta ?? ""),

@@ -1,5 +1,5 @@
 {
-  "name": "@devraj-labs/api-kit",
+  "name": "@88khp/api-kit",
   "version": "1.0.4",
   "description": "Production-grade API client with automatic token lifecycle management, race-condition-safe refresh handling, and platform-agnostic storage adapters.",
   "main": "dist/index.js",
@@ -46,5 +46,5 @@
     "bearer-token"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/devraj-labs/api-kit"
+  "homepage": "https://github.com/88khp/api-kit"
 }

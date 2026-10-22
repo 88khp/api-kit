@@ -8,7 +8,7 @@
 ## Install
 
 ```bash
-npm install @devraj-labs/api-kit
+npm install @88khp/api-kit
 ```
 
 ---
@@ -22,7 +22,7 @@ api-kit does not store tokens itself. You pass a `TokenStorage` implementation t
 | Platform | Recommended |
 |----------|-------------|
 | Browser | HttpOnly cookies via your server — see [storage.md](./storage.md#browser) |
-| React Native | `@devraj-labs/rn-storage-kit` → `SecureStorageAdapter` — see [storage.md](./storage.md#react-native) |
+| React Native | `@88khp/rn-storage-kit` → `SecureStorageAdapter` — see [storage.md](./storage.md#react-native) |
 | Node.js script | `MemoryTokenStorage` (built-in) |
 
 ### 2 — Initialise the singleton once
@@ -31,7 +31,7 @@ Call `ApiClient.getInstance(config)` **once**, at your app's entry point. Every 
 
 **Browser**
 ```ts
-import { ApiClient }          from "@devraj-labs/api-kit";
+import { ApiClient }          from "@88khp/api-kit";
 import { CookieTokenStorage }  from "./storage/cookieTokenStorage";
 
 ApiClient.getInstance({
@@ -45,7 +45,7 @@ ApiClient.getInstance({
 
 **React Native**
 ```ts
-import { ApiClient }            from "@devraj-labs/api-kit";
+import { ApiClient }            from "@88khp/api-kit";
 import { rnSecureTokenStorage } from "./storage/tokenStorage"; // SecureStorageAdapter bridge
 
 ApiClient.getInstance({
@@ -61,7 +61,7 @@ ApiClient.getInstance({
 
 **Node.js**
 ```ts
-import { ApiClient, MemoryTokenStorage } from "@devraj-labs/api-kit";
+import { ApiClient, MemoryTokenStorage } from "@88khp/api-kit";
 
 ApiClient.getInstance({
   baseURL: "http://localhost:4000",
@@ -72,7 +72,7 @@ ApiClient.getInstance({
 ### 3 — Use it anywhere
 
 ```ts
-import { ApiClient } from "@devraj-labs/api-kit";
+import { ApiClient } from "@88khp/api-kit";
 
 const client = ApiClient.getInstance(); // no config — returns the existing instance
 

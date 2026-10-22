@@ -24,7 +24,7 @@
  * 6. EXPONENTIAL BACK-OFF — transient server errors are retried with jitter.
  *
  * 7. LOGGER        — accepts any object with debug/info/warn/error methods.
- *                    Structurally compatible with @devraj-labs/logger (Logger /
+ *                    Structurally compatible with @88khp/logger (Logger /
  *                    ChildLogger) so you can pass your logger instance directly,
  *                    or a scoped child: logger.child({ module: "api-kit" }).
  *                    If omitted, all internal log calls are no-ops.

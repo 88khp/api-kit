@@ -41,7 +41,7 @@ All methods can be synchronous or async — api-kit `await`s them either way. Th
 **Recommended: HttpOnly cookies** — the browser attaches them automatically. Your `TokenStorage` just needs to make the right API calls; it never reads the token values directly.
 
 ```ts
-import type { TokenStorage, TokenPair } from "@devraj-labs/api-kit";
+import type { TokenStorage, TokenPair } from "@88khp/api-kit";
 
 // Tokens live in HttpOnly cookies set by the server.
 // The client never reads them — the browser attaches them automatically.
@@ -65,9 +65,9 @@ class CookieTokenStorage implements TokenStorage {
 
 ---
 
-### React Native — `@devraj-labs/rn-storage-kit` (recommended)
+### React Native — `@88khp/rn-storage-kit` (recommended)
 
-[`@devraj-labs/rn-storage-kit`](https://github.com/devraj-labs/rn-storage-kit) provides two adapters:
+[`@88khp/rn-storage-kit`](https://github.com/88khp/rn-storage-kit) provides two adapters:
 
 - **`SecureStorageAdapter`** — backed by `react-native-keychain` (iOS Keychain / Android Keystore). Values are hardware-encrypted and never logged in plain text.
 - **`MMKVStorageAdapter`** — backed by `react-native-mmkv`. Fast encrypted MMKV storage for non-secret data.
@@ -78,7 +78,7 @@ Neither is the same shape as `TokenStorage`, but bridging them is a one-time 15-
 
 ```bash
 # The storage kit
-npm install @devraj-labs/rn-storage-kit
+npm install @88khp/rn-storage-kit
 
 # Its peer dependencies
 npm install react-native-keychain react-native-mmkv
@@ -89,8 +89,8 @@ npx pod-install
 
 ```ts
 // tokenStorage.ts
-import { SecureStorageAdapter } from "@devraj-labs/rn-storage-kit";
-import type { TokenStorage, TokenPair } from "@devraj-labs/api-kit";
+import { SecureStorageAdapter } from "@88khp/rn-storage-kit";
+import type { TokenStorage, TokenPair } from "@88khp/api-kit";
 
 // Type the schema so get() is fully typed
 interface TokenSchema {
@@ -124,7 +124,7 @@ export const rnSecureTokenStorage: TokenStorage = {
 #### Use with api-kit
 
 ```ts
-import { ApiClient }          from "@devraj-labs/api-kit";
+import { ApiClient }          from "@88khp/api-kit";
 import { rnSecureTokenStorage } from "./tokenStorage";
 
 ApiClient.getInstance({
@@ -149,7 +149,7 @@ If you are not using rn-storage-kit, you can bridge `react-native-keychain` your
 
 ```ts
 import * as Keychain from "react-native-keychain";
-import type { TokenStorage, TokenPair } from "@devraj-labs/api-kit";
+import type { TokenStorage, TokenPair } from "@88khp/api-kit";
 
 const ACCESS_SERVICE  = "com.yourapp.access_token";
 const REFRESH_SERVICE = "com.yourapp.refresh_token";
@@ -186,7 +186,7 @@ export const keychainTokenStorage: TokenStorage = {
 For scripts and servers use `MemoryTokenStorage` (ships with api-kit). In long-running services, back it with Redis or a database:
 
 ```ts
-import type { TokenStorage, TokenPair } from "@devraj-labs/api-kit";
+import type { TokenStorage, TokenPair } from "@88khp/api-kit";
 import { createClient } from "redis";
 
 const redis = createClient();
@@ -216,7 +216,7 @@ api-kit ships three adapters for convenience. They are intentionally simple — 
 ### `MemoryTokenStorage`
 
 ```ts
-import { MemoryTokenStorage } from "@devraj-labs/api-kit";
+import { MemoryTokenStorage } from "@88khp/api-kit";
 const storage = new MemoryTokenStorage();
 ```
 
@@ -225,7 +225,7 @@ In-memory. Tokens lost on reload/restart. Good for: Node.js scripts, unit tests,
 ### `LocalStorageTokenStorage`
 
 ```ts
-import { LocalStorageTokenStorage } from "@devraj-labs/api-kit";
+import { LocalStorageTokenStorage } from "@88khp/api-kit";
 const storage = new LocalStorageTokenStorage();
 ```
 
@@ -235,11 +235,11 @@ const storage = new LocalStorageTokenStorage();
 
 ```ts
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageTokenStorage } from "@devraj-labs/api-kit";
+import { AsyncStorageTokenStorage } from "@88khp/api-kit";
 const storage = new AsyncStorageTokenStorage(AsyncStorage);
 ```
 
-> **Not recommended for tokens.** AsyncStorage is unencrypted plaintext on disk. Use `@devraj-labs/rn-storage-kit` with `SecureStorageAdapter` instead.
+> **Not recommended for tokens.** AsyncStorage is unencrypted plaintext on disk. Use `@88khp/rn-storage-kit` with `SecureStorageAdapter` instead.
 
 ---
 

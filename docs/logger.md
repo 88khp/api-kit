@@ -13,13 +13,13 @@ interface ApiKitLogger {
 }
 ```
 
-This is structurally identical to the `Logger` and `ChildLogger` classes exported by `@devraj-labs/logger`, so no adapter is needed.
+This is structurally identical to the `Logger` and `ChildLogger` classes exported by `@88khp/logger`, so no adapter is needed.
 
-## Using @devraj-labs/logger
+## Using @88khp/logger
 
 ```ts
-import { createLogger } from "@devraj-labs/logger";
-import { ApiClient }    from "@devraj-labs/api-kit";
+import { createLogger } from "@88khp/logger";
+import { ApiClient }    from "@88khp/api-kit";
 
 // Root logger — configure once at app startup
 const logger = createLogger({ level: "debug" });
@@ -38,7 +38,7 @@ All api-kit log entries will arrive at your logger's configured transports (Cons
 ## Using a plain console object
 
 ```ts
-import type { ApiKitLogger } from "@devraj-labs/api-kit";
+import type { ApiKitLogger } from "@88khp/api-kit";
 
 const logger: ApiKitLogger = {
   debug: (msg, meta) => console.debug("[api-kit]", msg, meta),

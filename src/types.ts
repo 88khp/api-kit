@@ -38,10 +38,10 @@ export interface TokenPair {
 /**
  * Minimal logger interface accepted by api-kit.
  *
- * Structurally compatible with @devraj-labs/logger's Logger and ChildLogger
+ * Structurally compatible with @88khp/logger's Logger and ChildLogger
  * out of the box — just pass your instance directly:
  *
- *   import { createLogger } from "@devraj-labs/logger";
+ *   import { createLogger } from "@88khp/logger";
  *   const logger = createLogger({ level: "debug" });
  *
  *   new ApiClient({ ..., logger });           // works — same shape
@@ -100,7 +100,7 @@ export interface ApiClientConfig {
   /** Retry configuration */
   retry?: RetryConfig;
   /**
-   * Logger instance. Accepts @devraj-labs/logger (Logger or ChildLogger),
+   * Logger instance. Accepts @88khp/logger (Logger or ChildLogger),
    * or any object with debug/info/warn/error methods.
    * If omitted, logging is silently suppressed.
    */

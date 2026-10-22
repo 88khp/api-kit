@@ -48,10 +48,10 @@ If the pre-emptive refresh fails (e.g. network blip), the original request is st
 
 ## JWT decoder
 
-api-kit ships a minimal JWT decoder in [src/jwt.ts](../src/jwt.ts) used only to read `exp`. It does **not** verify the signature — that is the server's responsibility.
+api-kit ships a minimal JWT decoder in [src/jwt.ts](https://github.com/88khp/api-kit/blob/main/src/jwt.ts) used only to read `exp`. It does **not** verify the signature — that is the server's responsibility.
 
 ```ts
-import { decodeJwt, isTokenExpiringSoon } from "@devraj-labs/api-kit";
+import { decodeJwt, isTokenExpiringSoon } from "@88khp/api-kit";
 
 const payload = decodeJwt(accessToken);
 // { sub: "u1", exp: 1712345678, iat: 1712342078, ... }
