@@ -2,6 +2,7 @@
   "name": "@88khp/api-kit",
   "version": "1.0.4",
   "description": "Production-grade API client with automatic token lifecycle management, race-condition-safe refresh handling, and platform-agnostic storage adapters.",
+  "homepage": "https://88khp.github.io/api-kit/",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -45,6 +46,5 @@
     "http-client",
     "bearer-token"
   ],
-  "license": "MIT",
-  "homepage": "https://github.com/88khp/api-kit"
+  "license": "MIT"
 }
