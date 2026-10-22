@@ -42,6 +42,30 @@ const { data } = await client.get<User>("/api/me");
 
 ---
 
+## Is it for you?
+
+### Why use it
+
+- Your app authenticates with a Bearer token and you want refresh handled for you.
+- You want retries and token handling in one client instead of repeated in every screen.
+
+### The problem it solves
+
+Token refresh is harder than it looks. When several requests fail with an expired token at once, each one tries to refresh, and the app ends up with races and duplicate refreshes. API Kit routes all of them through one refresh call and then retries the originals.
+
+### Who it's not for
+
+- Apps that authenticate with cookies or sessions instead of tokens.
+- Teams that want a full query cache or data-fetching layer. Use a library such as TanStack Query on top of it.
+
+### What it doesn't do
+
+- It doesn't verify JWT signatures. It only decodes the token to read its expiry, and the server does the verification.
+- It doesn't cache responses.
+- It doesn't generate types from an API schema.
+
+---
+
 ## Features
 
 **Token lifecycle — fully automatic**
